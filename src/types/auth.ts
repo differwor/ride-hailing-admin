@@ -1,20 +1,21 @@
-export type Role = 'admin' | 'operator';
-export type Permission = 'view' | 'create';
+export type Role = 'ADMIN' | 'OPERATOR';
 
 export interface User {
   id: number;
-  username: string;
+  email: string;
+  name: string;
   role: Role;
+  password?: string;
+  permissions?: string[];
 }
 
 export interface LoginCredentials {
-  username: string;
+  email: string;
   password: string;
 }
 
 export interface AuthResponse {
   success: boolean;
   message: string;
-  user: User | null;
-  token: string | null;
+  data: User;
 }

@@ -1,18 +1,32 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { AUTH_COOKIE_NAME } from "./const/01.auth";
+import { verifyToken } from "./lib/02.jose";
 
-export function middleware(request: NextRequest) {
-  console.log("middd");
-  const token = request.cookies.get("auth-token");
-  const isAuthPage = request.nextUrl.pathname.startsWith("/auth");
-  const isApiRoute = request.nextUrl.pathname.startsWith("/api");
+export async function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+  const token = request.cookies.get(AUTH_COOKIE_NAME)?.value;
 
-  if (!token && !isAuthPage && !isApiRoute) {
-    return NextResponse.redirect(new URL("/auth/login", request.url));
-  }
+  const loginUrl = new URL('/auth/login', request.url);
+  loginUrl.searchParams.set('redirectTo', pathname);
 
-  if (token && isAuthPage) {
-    return NextResponse.redirect(new URL("/dashboard", request.url));
+  if (token) {
+    try {
+      await verifyToken(token);
+
+      // If they are on auth page and have valid token, redirect to home
+      if (pathname.startsWith('/auth')) {
+        return NextResponse.redirect(new URL('/', request.url));
+      }
+    } catch {
+      // Remove token if verification failed
+      request.cookies.set(AUTH_COOKIE_NAME, '');
+
+      // Redirect to login page
+      return NextResponse.redirect(loginUrl);
+    }
+  } else {
+    return NextResponse.redirect(loginUrl);
   }
 
   return NextResponse.next();
@@ -20,11 +34,7 @@ export function middleware(request: NextRequest) {
 
 export const config = {
   /*
-   * Match all request paths except for the ones starting with:
-   * - api (API routes)
-   * - _next/static (static files)
-   * - _next/image (image optimization files)
-   * - favicon.ico (favicon file)
+   * Match all request paths starting with /adm
    */
-  matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
+  matcher: ['/adm/:path*'],
 };

@@ -1,51 +1,57 @@
-import { useState } from 'react';
-import { useRouter } from 'next/router';
-import { AuthService } from '@/services/api/auth.service';
-import toast from 'react-hot-toast';
+import { useActionState } from "react";
+import { useRouter } from "next/router";
+import { AuthService } from "@/services/auth.service";
+import toast from "react-hot-toast";
 
 export default function LoginForm() {
   const router = useRouter();
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-
-  const [username, setUsername] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
-
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      setIsLoading(true);
-      const response = await AuthService.login({ username, password });
-
-      if (response.success) {
-        router.push('/dashboard');
-      } else {
-        toast(response.message);
+  const [, formAction, pending] = useActionState(
+    async (previousState: unknown, formData: FormData) => {
+      try {
+        const authData = await AuthService.login({ 
+          email: formData.get("email") as string,
+          password: formData.get("password") as string, 
+        });
+        if (authData.success) {
+          router.push("/adm");
+          toast.success(authData.message);
+        } else {
+          toast.error(authData.message);
+        }
+      } catch (error) {
+        toast(error instanceof Error ? error.message : "Failed to login");
       }
-    } catch (error) {
-      toast(error instanceof Error ? error.message : 'Login failed');
-    } finally {
-      setIsLoading(false);
-    }
-  };
+    },
+    null
+  );
 
   return (
-    <form onSubmit={handleLogin}>
+    <form
+      action={formAction}
+      className="flex flex-col items-center gap-4 max-w-xs mx-auto text-black"
+    >
       <input
-        type="username"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-        placeholder="Username"
+        type="email"
+        name="email"
+        placeholder="Email"
         required
+        className="p-2 w-full rounded bg-gray-100 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
       />
       <input
         type="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
+        name="password"
         placeholder="Password"
         required
+        className="p-2 w-full rounded bg-gray-100 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
       />
-      <button type="submit" disabled={isLoading}>
-        {isLoading ? 'Logging in...' : 'Login'}
+      <button
+        type="submit"
+        disabled={pending}
+        className={`p-2 w-full rounded bg-blue-500 text-white ${
+          pending ? "cursor-not-allowed opacity-50" : "cursor-pointer"
+        }`}
+      >
+        {pending ? "Logging in..." : "Login"}
       </button>
     </form>
   );
