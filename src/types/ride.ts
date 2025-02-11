@@ -8,9 +8,3 @@ export interface Ride {
   destination: string,
   status: Status,
 }
-
-export interface RideResponse {
-  success: boolean;
-  message: string;
-  data: Ride[];
-}

@@ -1,3 +1,5 @@
+'use client'
+
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { User } from "@/types/auth";
 import { AuthService } from "@/services/auth.service";
@@ -14,9 +16,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     AuthService.getProfile().then((res) => {
-      setProfile(res.data);
-    }).catch(() => {
-      toast.error("Failed to fetch user profile");
+      if (res.error) {
+        toast.error(res.error);
+      } else {
+        setProfile(res.data);
+      }
     });
   }, []);
 

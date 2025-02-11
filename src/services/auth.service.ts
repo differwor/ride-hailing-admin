@@ -1,35 +1,17 @@
 import { API_PREFIX } from '@/const/01.auth';
-import Api from '@/lib/01.axios';
-import { LoginCredentials, AuthResponse } from '@/types/auth';
+import { LoginCredentials, User } from '@/types/auth';
+import { ApiService } from './api.service';
 
 export class AuthService {
-  static async login(credentials: LoginCredentials): Promise<AuthResponse> {
-    try {
-      const response = await Api.post<AuthResponse>(`${API_PREFIX}/login`, credentials);
-      return response.data;
-    } catch (error) {
-      throw this.handleError(error);
-    }
+  static async login(credentials: LoginCredentials) {
+    return ApiService.post<User>(`${API_PREFIX}/login`, credentials as User);
   }
 
   static async logout(): Promise<void> {
-    try {
-      await Api.post<AuthResponse>(`${API_PREFIX}/logout`);
-    } catch (error) {
-      throw this.handleError(error);
-    }
+    await ApiService.post(`${API_PREFIX}/logout`, null);
   }
 
-  static async getProfile(): Promise<AuthResponse> {
-    try {
-      const response = await Api.get<AuthResponse>(`${API_PREFIX}/me`);
-      return response.data;
-    } catch (error) {
-      throw this.handleError(error);
-    }
-  }
-
-  private static handleError(error: unknown): Error {
-    return new Error(error instanceof Error ? error.message : 'An error occurred');
+  static async getProfile() {
+    return ApiService.get<User>(`${API_PREFIX}/me`);
   }
 }

@@ -33,12 +33,15 @@ JWT (Jose) (without refresh token)
 Store token in cookies
 Manage page redirection in middleware
 
-2. Dashboard UI
+2. Error Handling
+Define response format
+Catch all errors in api service, consistently return a data format to handle easily
+
 
 
 ## Note
 
 - Recoil do not being updated now so there is no support for it hence it will not work for the newer versions of react.
-
+- API Response format { message, data }
 
 

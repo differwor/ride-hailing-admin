@@ -1,9 +1,9 @@
-const Driver = () => {
+
+
+export default async function Page() {
   return (
     <div>
       Driver
     </div>
   )
 }
-
-export default Driver;

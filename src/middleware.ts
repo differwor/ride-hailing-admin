@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { AUTH_COOKIE_NAME } from "./const/01.auth";
-import { verifyToken } from "./lib/02.jose";
+import { verifyToken } from "./lib/02.auth";
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;

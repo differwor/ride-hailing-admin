@@ -1,25 +1,24 @@
+'use client'
+
 import { useActionState } from "react";
-import { useRouter } from "next/router";
-import { AuthService } from "@/services/auth.service";
 import toast from "react-hot-toast";
+import { AuthService } from "@/services/auth.service";
+import { useRouter } from "next/navigation";
 
 export default function LoginForm() {
   const router = useRouter();
   const [, formAction, pending] = useActionState(
     async (previousState: unknown, formData: FormData) => {
-      try {
-        const authData = await AuthService.login({ 
-          email: formData.get("email") as string,
-          password: formData.get("password") as string, 
-        });
-        if (authData.success) {
-          router.push("/adm");
-          toast.success(authData.message);
-        } else {
-          toast.error(authData.message);
-        }
-      } catch (error) {
-        toast(error instanceof Error ? error.message : "Failed to login");
+      const authResponse = await AuthService.login({ 
+        email: formData.get("email") as string,
+        password: formData.get("password") as string, 
+      });
+
+      if (authResponse.error) {
+        toast.error(authResponse.error);
+      } else {
+        router.push("/adm");
+        toast.success("Login successfully");
       }
     },
     null
