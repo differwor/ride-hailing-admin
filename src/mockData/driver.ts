@@ -1,26 +1,26 @@
 export const drivers = [
   {
     id: 101,
-    name: 'Lagos1',
+    name: 'dri101',
     phone: '1112234',
     vehicleDetail: 'The lambogini truck'
   },
   {
     id: 102,
-    name: 'Lagos2',
+    name: 'dri102',
     phone: '2112234',
-    vehicleDetail: 'The lambogini truck'
+    vehicleDetail: 'The roll royce truck'
   },
   {
     id: 103,
-    name: 'Lagos3',
+    name: 'dri103',
     phone: '3112234',
-    vehicleDetail: 'The lambogini truck'
+    vehicleDetail: 'The mercedes truck'
   },
   {
     id: 104,
-    name: 'Lagos4',
+    name: 'dri104',
     phone: '4112234',
-    vehicleDetail: 'The lambogini truck'
+    vehicleDetail: 'The vinfast truck'
   },
 ]

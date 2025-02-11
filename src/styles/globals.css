@@ -15,9 +15,22 @@
   }
 }
 
+* {
+  font-family: "Quantico", serif;
+}
+
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: "Quantico", serif;
-  font-weight: 500;
+}
+
+select {
+  /* for Firefox */
+  -moz-appearance: none;
+  /* for Safari, Chrome, Opera */
+  -webkit-appearance: none;
+}
+
+select::-ms-expand {
+  display: none;
 }

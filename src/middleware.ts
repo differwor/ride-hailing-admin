@@ -1,11 +1,10 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { AUTH_COOKIE_NAME } from "./const/01.auth";
-import { verifyToken } from "./lib/02.auth";
+import { getTokenFromCookie, removeTokenCookie, verifyToken } from "./lib/02.auth";
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  const token = request.cookies.get(AUTH_COOKIE_NAME)?.value;
+  const token = await getTokenFromCookie();
 
   const loginUrl = new URL('/auth/login', request.url);
   loginUrl.searchParams.set('redirectTo', pathname);
@@ -20,12 +19,14 @@ export async function middleware(request: NextRequest) {
       }
     } catch {
       // Remove token if verification failed
-      request.cookies.set(AUTH_COOKIE_NAME, '');
+      await removeTokenCookie();
 
       // Redirect to login page
       return NextResponse.redirect(loginUrl);
     }
-  } else {
+  } 
+  
+  if (!token && !pathname.startsWith('/auth')) {
     return NextResponse.redirect(loginUrl);
   }
 
@@ -34,7 +35,7 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   /*
-   * Match all request paths starting with /adm
+   * Match all request paths starting with /adm and /auth
    */
-  matcher: ['/adm/:path*'],
+  matcher: ['/adm/:path*', '/auth/:path*'],
 };

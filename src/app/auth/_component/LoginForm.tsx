@@ -13,7 +13,6 @@ export default function LoginForm() {
         email: formData.get("email") as string,
         password: formData.get("password") as string, 
       });
-
       if (authResponse.error) {
         toast.error(authResponse.error);
       } else {
@@ -33,6 +32,7 @@ export default function LoginForm() {
         type="email"
         name="email"
         placeholder="Email"
+        autoComplete="username"
         required
         className="p-2 w-full rounded bg-gray-100 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
       />
@@ -40,6 +40,7 @@ export default function LoginForm() {
         type="password"
         name="password"
         placeholder="Password"
+        autoComplete="current-password"
         required
         className="p-2 w-full rounded bg-gray-100 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
       />
