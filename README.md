@@ -26,3 +26,19 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
 
+## Overview
+
+1. Login system
+JWT (Jose) (without refresh token)
+Store token in cookies
+Manage page redirection in middleware
+
+2. Dashboard UI
+
+
+## Note
+
+- Recoil do not being updated now so there is no support for it hence it will not work for the newer versions of react.
+
+
+
