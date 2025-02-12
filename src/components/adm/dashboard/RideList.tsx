@@ -8,7 +8,7 @@ import {
   SyncOutlined,
 } from "@ant-design/icons";
 import { Space, Table, Tag } from "antd";
-import { FC, memo, useEffect, useRef, useState } from "react";
+import { FC, memo, useCallback, useEffect, useRef, useState } from "react";
 import FilterBar from "./FilterBar";
 import { RideService } from "@/services/ride.service";
 import toast from "react-hot-toast";
@@ -95,12 +95,12 @@ const RideList: FC<IProps> = ({ ridesSSR }) => {
     limit: PAGINATION_LIMIT,
   });
 
-  const changeFilter = async (
+  const changeFilter = useCallback(async (
     key: keyof RideFilterParams,
     value: string | null,
   ) => {
-    setFilterData((prev) => ({ ...prev, [key]: value }));
-  };
+    setFilterData((prev) => ({ ...prev, page: 1, [key]: value }));
+  }, [setFilterData]);
 
   useEffect(() => {
     if (isFirstRender.current) {
