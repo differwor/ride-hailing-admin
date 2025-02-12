@@ -6,7 +6,7 @@ export interface User {
   name: string;
   role: Role;
   password?: string;
-  permissions?: string[];
+  permissions: string[];
 }
 
 export interface LoginCredentials {

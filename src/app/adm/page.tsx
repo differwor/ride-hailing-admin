@@ -1,14 +1,15 @@
 import { RideService } from '@/services/ride.service';
 import { Metadata } from 'next';
-import RidesTable from './_components/RidesTable';
+import RideList from '@/components/adm/dashboard/RideList';
+import { PAGINATION_LIMIT } from '@/config/01.constants';
 
 export const metadata: Metadata = {
   title: "Admin Center",
 };
 
-export default async function Page() {
-  const ridesResponse = await RideService.getRides();
+export default async function Dashboard() {
+  const ridesResponse = await RideService.getRides({ page: 1, limit: PAGINATION_LIMIT });
   return (
-    <RidesTable listRides={ridesResponse.data || []} />
+    <RideList ridesSSR={ridesResponse.data} />
   );
 }
