@@ -86,7 +86,7 @@ const columns = [
 ];
 
 const RideList: FC<IProps> = ({ ridesSSR }) => {
-  const { withLoading, isLoading } = useLoading();
+  const { isLoading, startLoading, stopLoading } = useLoading();
   const isFirstRender = useRef(true); // skip fetch data in first time
   const [rideData, setRideList] = useState<RideResponse | null>(ridesSSR);
   const [filterData, setFilterData] = useState<RideFilterParams>({
@@ -97,28 +97,34 @@ const RideList: FC<IProps> = ({ ridesSSR }) => {
     limit: PAGINATION_LIMIT,
   });
 
-  const changeFilter = useCallback(async (
-    key: keyof RideFilterParams,
-    value: string | null,
-  ) => {
-    setFilterData((prev) => ({ ...prev, page: 1, [key]: value }));
-  }, []);
+  const changeFilter = useCallback(
+    async (key: keyof RideFilterParams, value: string | null) => {
+      startLoading();
+      setFilterData((prev) => ({ ...prev, page: 1, [key]: value }));
+    },
+    [startLoading]
+  );
 
   useEffect(() => {
     if (isFirstRender.current) {
       isFirstRender.current = false;
       return;
     }
-    withLoading(RideService.getRides(filterData).then((res) => {
-      if (res.error) {
-        return toast.error(res.error);
-      }
-
-      if (res.data) {
-        setRideList(res.data);
-      }
-    }));
-  }, [filterData, withLoading]);
+    const fetchRides = async () => {
+      // NOTE: Simulate delay 1s to view loading state
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      
+      const rideResponse = await RideService.getRides(filterData).then((res) => {
+        if (res.error) {
+          toast.error(res.error);
+        }
+        return res.data;
+      });
+      stopLoading();
+      setRideList(rideResponse);
+    };
+    fetchRides();
+  }, [filterData, stopLoading]);
 
   return (
     <>
@@ -134,7 +140,7 @@ const RideList: FC<IProps> = ({ ridesSSR }) => {
             console.log(
               `selectedRowKeys: ${selectedRowKeys}`,
               "selectedRows: ",
-              selectedRows,
+              selectedRows
             );
           },
           onSelect: (record, selected, selectedRows) => {

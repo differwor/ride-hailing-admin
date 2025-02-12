@@ -11,6 +11,7 @@ import {
   UserOutlined,
 } from "@ant-design/icons";
 import { Menu, Button } from "antd";
+import Link from "next/link";
 
 export default function Sidebar() {
   const router = useRouter();
@@ -29,28 +30,27 @@ export default function Sidebar() {
         <p className="p-5 text-center">{profile?.role} PANEL</p>
         <Menu
           theme="light"
-          onClick={(e) => router.push(e.key)}
           defaultSelectedKeys={[pathname]}
           items={[
             {
               key: "/adm",
               icon: <DashboardOutlined />,
-              label: "Dashboard",
+              label: <Link href="/adm">Dashboard</Link>,
             },
             {
               key: "/adm/driver",
               icon: <TruckOutlined />,
-              label: "Manage driver",
+              label: <Link href="/adm/driver">Manage driver</Link>,
             },
             {
               key: "/adm/permission",
               icon: <SecurityScanOutlined />,
-              label: "Permission",
+              label: <Link href="/adm/permission">Permission</Link>,
             },
             {
               key: "/adm/profile",
               icon: <UserOutlined />,
-              label: "Profile",
+              label: <Link href="/adm/profile">Profile</Link>,
             },
           ]}
           style={{
