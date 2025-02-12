@@ -43,5 +43,9 @@ Catch all errors in api service, consistently return a data format to handle eas
 
 - Recoil do not being updated now so there is no support for it hence it will not work for the newer versions of react.
 - API Response format { message, data }
+- Only pre-fetch profile from client side, need to get cookie token in browser 
 
+## Do not done
 
+- Remake config folder: api, routes
+- Login form validation

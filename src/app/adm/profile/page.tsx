@@ -1,6 +1,6 @@
 'use client'
 
-import { useAuth } from "@/app/adm/_context/AuthContext";
+import { useAuth } from "@/app/_context/AuthContext";
 
 export default function Page() {
   const { profile } = useAuth();
