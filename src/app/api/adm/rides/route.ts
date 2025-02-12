@@ -57,6 +57,10 @@ export async function GET(request: NextRequest) {
     ridesByPaging = ridesByFilter.slice(startIndex, startIndex + limit);
   }
 
+  // Simulate delay 2s
+  await new Promise((resolve) => setTimeout(resolve, 2000));
+
+
   return NextResponse.json(
     {
       message: null,

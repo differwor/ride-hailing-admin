@@ -13,6 +13,7 @@ import FilterBar from "./FilterBar";
 import { RideService } from "@/services/ride.service";
 import toast from "react-hot-toast";
 import { PAGINATION_LIMIT } from "@/config/01.constants";
+import { useLoading } from "@/hooks/useLoading";
 
 interface IProps {
   ridesSSR: RideResponse | null;
@@ -85,6 +86,7 @@ const columns = [
 ];
 
 const RideList: FC<IProps> = ({ ridesSSR }) => {
+  const { withLoading, isLoading } = useLoading();
   const isFirstRender = useRef(true); // skip fetch data in first time
   const [rideData, setRideList] = useState<RideResponse | null>(ridesSSR);
   const [filterData, setFilterData] = useState<RideFilterParams>({
@@ -100,14 +102,14 @@ const RideList: FC<IProps> = ({ ridesSSR }) => {
     value: string | null,
   ) => {
     setFilterData((prev) => ({ ...prev, page: 1, [key]: value }));
-  }, [setFilterData]);
+  }, []);
 
   useEffect(() => {
     if (isFirstRender.current) {
       isFirstRender.current = false;
       return;
     }
-    RideService.getRides(filterData).then((res) => {
+    withLoading(RideService.getRides(filterData).then((res) => {
       if (res.error) {
         return toast.error(res.error);
       }
@@ -115,16 +117,17 @@ const RideList: FC<IProps> = ({ ridesSSR }) => {
       if (res.data) {
         setRideList(res.data);
       }
-    });
-  }, [filterData]);
+    }));
+  }, [filterData, withLoading]);
 
   return (
     <>
-      <FilterBar changeFilter={changeFilter} />
+      <FilterBar loading={isLoading} changeFilter={changeFilter} />
       <Table
         rowKey={(r) => r.id}
         dataSource={rideData?.items || []}
         columns={columns}
+        loading={isLoading}
         bordered
         rowSelection={{
           onChange: (selectedRowKeys, selectedRows) => {
