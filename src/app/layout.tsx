@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Toaster } from "react-hot-toast";
 import "@/styles/globals.css";
 import { AntdRegistry } from "@ant-design/nextjs-registry";
+import { ConfigProvider } from "antd";
 
 export const metadata: Metadata = {
   title: "Welcome",
@@ -21,7 +22,11 @@ export default function RootLayout({
   return (
     <html lang="en" className="light">
       <body>
-        <AntdRegistry>{children}</AntdRegistry>
+        <AntdRegistry>
+          <ConfigProvider theme={{ hashed: false, token: { fontFamily: "Quantico" } }}>
+            {children}
+          </ConfigProvider>
+        </AntdRegistry>
         <Toaster />
       </body>
     </html>
