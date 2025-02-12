@@ -1,6 +1,6 @@
-import { LoginCredentials, User } from '@/types/auth';
-import { ApiService } from './api.service';
-import { API_AUTH_PREFIX } from '@/config/01.constants';
+import { LoginCredentials, User } from "@/types/auth";
+import { ApiService } from "./api.service";
+import { API_AUTH_PREFIX } from "@/config/01.constants";
 
 export class AuthService {
   static async login(credentials: LoginCredentials) {

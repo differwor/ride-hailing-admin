@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import { useActionState } from "react";
 import toast from "react-hot-toast";
@@ -9,9 +9,9 @@ export default function LoginForm() {
   const router = useRouter();
   const [, formAction, pending] = useActionState(
     async (previousState: unknown, formData: FormData) => {
-      const authResponse = await AuthService.login({ 
+      const authResponse = await AuthService.login({
         email: formData.get("email") as string,
-        password: formData.get("password") as string, 
+        password: formData.get("password") as string,
       });
       if (authResponse.error) {
         toast.error(authResponse.error);
@@ -20,7 +20,7 @@ export default function LoginForm() {
         toast.success("Login successfully");
       }
     },
-    null
+    null,
   );
 
   return (

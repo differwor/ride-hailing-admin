@@ -1,6 +1,12 @@
-'use client'
+"use client";
 
-import { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+} from "react";
 import { User } from "@/types/auth";
 import { AuthService } from "@/services/auth.service";
 import toast from "react-hot-toast";
@@ -25,9 +31,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ profile }}>
-      {children}
-    </AuthContext.Provider>
+    <AuthContext.Provider value={{ profile }}>{children}</AuthContext.Provider>
   );
 };
 

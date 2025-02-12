@@ -25,9 +25,9 @@ const FilterBar: FC<IProps> = ({ changeFilter }) => {
         />
         <DatePicker.RangePicker
           onChange={(dates) => {
-            if (!dates) return changeFilter("dateRange", null);;
+            if (!dates) return changeFilter("dateRange", null);
             const formattedDate = `${dayjs(dates[0]).format(
-              "YYYY-MM-DD"
+              "YYYY-MM-DD",
             )},${dayjs(dates[0]).format("YYYY-MM-DD")}`;
             changeFilter("dateRange", formattedDate);
           }}

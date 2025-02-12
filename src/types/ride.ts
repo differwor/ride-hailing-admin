@@ -1,7 +1,7 @@
 import { PaginationResponse } from "./api";
 import { Driver } from "./driver";
 
-export type Status = 'completed' | 'cancelled' | 'pending' | 'in-progress';
+export type Status = "completed" | "cancelled" | "pending" | "in-progress";
 
 export type RideFilterParams = {
   status?: Status | null;

@@ -97,7 +97,7 @@ const RideList: FC<IProps> = ({ ridesSSR }) => {
 
   const changeFilter = async (
     key: keyof RideFilterParams,
-    value: string | null
+    value: string | null,
   ) => {
     setFilterData((prev) => ({ ...prev, [key]: value }));
   };
@@ -131,7 +131,7 @@ const RideList: FC<IProps> = ({ ridesSSR }) => {
             console.log(
               `selectedRowKeys: ${selectedRowKeys}`,
               "selectedRows: ",
-              selectedRows
+              selectedRows,
             );
           },
           onSelect: (record, selected, selectedRows) => {

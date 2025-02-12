@@ -1,10 +1,15 @@
-'use client'
+"use client";
 
 import { usePathname, useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { useAuth } from "@/app/_context/AuthContext";
 import { AuthService } from "@/services/auth.service";
-import { DashboardOutlined, TruckOutlined, SecurityScanOutlined, UserOutlined } from "@ant-design/icons";
+import {
+  DashboardOutlined,
+  TruckOutlined,
+  SecurityScanOutlined,
+  UserOutlined,
+} from "@ant-design/icons";
 import { Menu, Button } from "antd";
 
 export default function Sidebar() {
@@ -19,42 +24,47 @@ export default function Sidebar() {
   };
 
   return (
-    <div className='h-full flex flex-col justify-between border-e border-[#0505050f]'>
-      <div className=''>
-        <p className='p-5 text-center'>{profile?.role} PANEL</p>            
+    <div className="h-full flex flex-col justify-between border-e border-[#0505050f]">
+      <div className="">
+        <p className="p-5 text-center">{profile?.role} PANEL</p>
         <Menu
           theme="light"
-          onClick={e => router.push(e.key)}
+          onClick={(e) => router.push(e.key)}
           defaultSelectedKeys={[pathname]}
           items={[
             {
-              key: '/adm',
+              key: "/adm",
               icon: <DashboardOutlined />,
-              label: 'Dashboard',
+              label: "Dashboard",
             },
             {
-              key: '/adm/driver',
+              key: "/adm/driver",
               icon: <TruckOutlined />,
-              label: 'Manage driver',
+              label: "Manage driver",
             },
             {
-              key: '/adm/permission',
+              key: "/adm/permission",
               icon: <SecurityScanOutlined />,
-              label: 'Permission',
+              label: "Permission",
             },
             {
-              key: '/adm/profile',
+              key: "/adm/profile",
               icon: <UserOutlined />,
-              label: 'Profile',
+              label: "Profile",
             },
           ]}
           style={{
-            borderInlineEndColor: 'transparent'
+            borderInlineEndColor: "transparent",
           }}
         />
       </div>
-      <div className='w-full p-1'>
-        <Button color="default" variant="dashed" className='w-full' onClick={handleLogout}>
+      <div className="w-full p-1">
+        <Button
+          color="default"
+          variant="dashed"
+          className="w-full"
+          onClick={handleLogout}
+        >
           Logout
         </Button>
       </div>

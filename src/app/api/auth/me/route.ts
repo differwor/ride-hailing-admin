@@ -10,8 +10,11 @@ export async function GET() {
   const user = await verifyToken(token as string);
 
   // Get newest user info
-  const newestInfo = users.find(u => u.email === user.email);
+  const newestInfo = users.find((u) => u.email === user.email);
 
   // Return user data without password
-  return NextResponse.json({ message: null, data: newestInfo }, { status: 200 });
+  return NextResponse.json(
+    { message: null, data: newestInfo },
+    { status: 200 },
+  );
 }

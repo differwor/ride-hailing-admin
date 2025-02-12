@@ -9,9 +9,9 @@ const compat = new FlatCompat({
   baseDirectory: __dirname,
   allConfig: {
     rules: {
-      "semi": ["error", "always"],
+      semi: ["error", "always"],
     },
-  }
+  },
 });
 
 const eslintConfig = [

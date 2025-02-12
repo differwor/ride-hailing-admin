@@ -3,12 +3,11 @@ import { ApiResponse, QueryParams } from "@/types/api";
 import { AxiosError } from "axios";
 import _get from "lodash/get";
 
-
 export class ApiService {
   static async request<T>(
     method: string,
     url: string,
-    data?: unknown
+    data?: unknown,
   ): Promise<ApiResponse<T>> {
     try {
       const response = await axiosInstance.request<T>({
@@ -45,7 +44,7 @@ export class ApiService {
       ? `?${new URLSearchParams(
           Object.entries(params)
             .filter(([, value]) => value !== null && value !== undefined)
-            .map(([key, value]) => [key, String(value)])
+            .map(([key, value]) => [key, String(value)]),
         ).toString()}`
       : "";
     return this.request<T>("GET", `${url}${queryString}`);

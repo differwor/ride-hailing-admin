@@ -29,13 +29,13 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 ## Overview
 
 1. Login system
-JWT (Jose) (without refresh token)
-Store token in cookies
-Manage page redirection in middleware
+   JWT (Jose) (without refresh token)
+   Store token in cookies
+   Manage page redirection in middleware
 
 2. Error Handling
-Define response format
-Catch all errors in api service, consistently return a data format to handle easily
+   Define response format
+   Catch all errors in api service, consistently return a data format to handle easily
 
 3. Dashboard UI
 
@@ -43,7 +43,7 @@ Catch all errors in api service, consistently return a data format to handle eas
 
 - Recoil do not being updated now so there is no support for it hence it will not work for the newer versions of react.
 - API Response format { message, data }
-- Only pre-fetch profile from client side, need to get cookie token in browser 
+- Only pre-fetch profile from client side, need to get cookie token in browser
 
 ## Do not done
 

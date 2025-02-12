@@ -10,7 +10,7 @@ dayjs.extend(isBetween);
 const isDateInRange = (
   checkDate: string,
   startDate: string,
-  endDate: string
+  endDate: string,
 ) => {
   if (!checkDate || !startDate || !endDate) return false;
   return dayjs(checkDate).isBetween(startDate, endDate, "day", "[]");
@@ -67,9 +67,9 @@ export async function GET(request: NextRequest) {
           limit: limit,
           totalItems: ridesByFilter.length,
           totalPages: Math.ceil(ridesByFilter.length / limit),
-        }
+        },
       },
     },
-    { status: 200 }
+    { status: 200 },
   );
 }
