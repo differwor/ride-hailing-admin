@@ -10,6 +10,7 @@ import { statusConfig } from "./RideList";
 import SearchInput from "@/components/common/SearchInput";
 import { DriverService } from "@/services/driver.service";
 import useUserStore from "@/store/useUserStore";
+import _includes from "lodash/includes";
 
 interface IProps {
   id: number;
@@ -17,7 +18,7 @@ interface IProps {
 }
 
 const RideDetailModal: FC<IProps> = ({ id, reloadList }) => {
-  const { hasPermission } = useUserStore();
+  const { pers } = useUserStore();
   const [form] = Form.useForm();
   const { isLoading, startLoading, stopLoading } = useLoading();
   const [open, setOpen] = useState<boolean>(false);
@@ -87,8 +88,8 @@ const RideDetailModal: FC<IProps> = ({ id, reloadList }) => {
   );
 
   const canEditing = useCallback(
-    (key: string) => editable && hasPermission(key),
-    [editable, hasPermission],
+    (key: string) => editable && _includes(pers, key),
+    [editable, pers],
   );
 
   const config = useMemo(

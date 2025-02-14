@@ -26,6 +26,8 @@ import { useLoading } from "@/hooks/useLoading";
 import RideDetailModal from "./RideDetailModal";
 import RideCreateModal from "./RideCreateModal";
 import useUserStore from "@/store/useUserStore";
+import { useSocketStore } from "@/store/useSocketStore";
+import _includes from "lodash/includes";
 
 interface IProps {
   ridesSSR: RideResponse | null;
@@ -51,7 +53,8 @@ export const statusConfig = {
 };
 
 const RideList: FC<IProps> = ({ ridesSSR }) => {
-  const { hasPermission } = useUserStore();
+  const { socket } = useSocketStore();
+  const { pers } = useUserStore();
   const { isLoading, startLoading, stopLoading } = useLoading();
   const isFirstRender = useRef(true); // skip fetch data in first time because it was fetched from server side
   const [rideData, setRideList] = useState<RideResponse | null>(ridesSSR);
@@ -98,6 +101,14 @@ const RideList: FC<IProps> = ({ ridesSSR }) => {
     }
     fetchRides();
   }, [fetchRides, filterData, stopLoading]);
+
+  useEffect(() => {
+    if (!socket) return;
+    socket.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      console.log("Received:", data);
+    };
+  }, [socket]);
 
   const columns = useMemo(
     () => [
@@ -156,7 +167,7 @@ const RideList: FC<IProps> = ({ ridesSSR }) => {
   // delete feature
   const deleteButton = useMemo(
     () =>
-      hasPermission("delete") && (
+      _includes(pers, "delete") && (
         <Button
           onClick={() => {
             if (!selectedRideIds.length)
@@ -180,23 +191,23 @@ const RideList: FC<IProps> = ({ ridesSSR }) => {
           Delete
         </Button>
       ),
-    [fetchRides, hasPermission, selectedRideIds, startLoading, stopLoading],
+    [fetchRides, pers, selectedRideIds, startLoading, stopLoading],
   );
   const deleleConfig = useMemo(
     () =>
-      hasPermission("delete")
+      _includes(pers, "delete")
         ? {
             onChange: (selectedRowKeys: Key[]) =>
               setSelectedRideIds(selectedRowKeys),
           }
         : undefined,
-    [hasPermission],
+    [pers],
   );
 
   // create feature
   const createButton = useMemo(
-    () => hasPermission("create") && <RideCreateModal reloadList={reloadRides} />,
-    [hasPermission, reloadRides],
+    () => _includes(pers, "create") && <RideCreateModal reloadList={reloadRides} />,
+    [pers, reloadRides],
   );
 
   return (

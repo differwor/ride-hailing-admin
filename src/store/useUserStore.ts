@@ -5,23 +5,22 @@ import { create } from "zustand";
 
 interface UserStore {
   user: User | null;
+  pers: string[] | []; // can define permission type
   fetchUsers: () => Promise<void>;
-  hasPermission: (key: string) => boolean;
 }
 
-const useUserStore = create<UserStore>((set, get) => ({
+const useUserStore = create<UserStore>((set) => ({
   user: null,
+  pers: [],
   fetchUsers: async () => {
     AuthService.getProfile().then((res) => {
       if (res.error) {
         toast.error(res.error);
       } else {
-        set({ user: res.data });
+        set({ user: res.data, pers: res.data?.permissions });
       }
     });
   },
-  hasPermission: (key: string) =>
-    (get().user?.permissions || []).includes(key) || false,
 }));
 
 export default useUserStore;
