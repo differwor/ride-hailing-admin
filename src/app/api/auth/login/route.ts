@@ -1,9 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
 import _omit from "lodash/omit";
-import { User } from "@/types/auth";
 import { users } from "@/mockData/user";
 import { permissions } from "@/mockData/permission";
 import { createToken, setTokenCookie } from "@/lib/02.auth";
+
+type Role = "ADMIN" | "OPERATOR";
+
+type User = {
+  id: number;
+  email: string;
+  name: string;
+  password: string;
+  role: Role;
+  permissions?: string[];
+};
 
 export async function POST(request: NextRequest) {
   const { email, password } = await request.json();

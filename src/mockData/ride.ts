@@ -1,15 +1,27 @@
-import { Status } from "@/types/ride";
+type Status = "completed" | "cancelled" | "pending" | "in-progress";
 
-export const rides = [
+interface Ride {
+  id: number;
+  customer: string;
+  driverId: number;
+  pickup: string;
+  destination: string;
+  status: Status;
+  createdDate: string | null;
+  rating: number | null;
+  review: string | null;
+}
+
+export let rides: Ride[] = [
   {
     id: 1,
     customer: "cus1",
     driverId: 101,
     pickup: "pic1",
     destination: "des1",
-    status: "completed" as Status,
+    status: "completed",
     createdDate: "2025-02-01",
-    rating: 5,
+    rating: 4,
     review: "Great ride",
   },
   {
@@ -18,9 +30,9 @@ export const rides = [
     driverId: 102,
     pickup: "pic2",
     destination: "des2",
-    status: "cancelled" as Status,
+    status: "cancelled",
     createdDate: "2025-02-03",
-    rating: 5,
+    rating: 4,
     review: "Great ride",
   },
   {
@@ -29,9 +41,9 @@ export const rides = [
     driverId: 103,
     pickup: "pic3",
     destination: "des3",
-    status: "pending" as Status,
+    status: "pending",
     createdDate: "2025-02-05",
-    rating: 5,
+    rating: 2,
     review: "Great ride",
   },
   {
@@ -40,9 +52,9 @@ export const rides = [
     driverId: 104,
     pickup: "pic4",
     destination: "des4",
-    status: "in-progress" as Status,
+    status: "in-progress",
     createdDate: "2025-02-07",
-    rating: 5,
+    rating: 3,
     review: "Great ride",
   },
   {
@@ -51,7 +63,7 @@ export const rides = [
     driverId: 102,
     pickup: "pic5",
     destination: "des6",
-    status: "in-progress" as Status,
+    status: "in-progress",
     createdDate: "2025-02-09",
     rating: 1,
     review: "Not good ride",
@@ -62,9 +74,25 @@ export const rides = [
     driverId: 103,
     pickup: "pic6",
     destination: "des6",
-    status: "completed" as Status,
+    status: "completed",
     createdDate: "2025-02-11",
     rating: 2,
     review: "Good ride",
   },
 ];
+
+export const remove = (ids: string) => {
+  const parsedIds = ids.split(",");
+  rides = rides.filter((item) => !parsedIds.includes(String(item.id)));
+};
+
+export const create = (newItem: Ride) => {
+  rides.push(newItem);
+  return newItem;
+};
+
+export const update = (newItem: Ride) => {
+  const index = rides.findIndex((item) => item.id === newItem.id);
+  rides[index] = newItem;
+  return newItem;
+};

@@ -41,14 +41,15 @@ export async function createToken(payload: JWTPayload): Promise<string> {
   const token = await new SignJWT(payload)
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
-    .setExpirationTime("1h")
+    .setExpirationTime("24h")
     .sign(secret_key);
 
   return token;
 }
 
-export async function verifyToken(token: string): Promise<JWTPayload> {
-  const verified = await jwtVerify(token, secret_key);
+export async function verifyToken(): Promise<JWTPayload> {
+  const token = await getTokenFromCookie();
+  const verified = await jwtVerify(token as string, secret_key);
   return verified.payload;
 }
 

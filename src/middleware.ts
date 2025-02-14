@@ -15,7 +15,7 @@ export async function middleware(request: NextRequest) {
 
   if (token) {
     try {
-      await verifyToken(token);
+      await verifyToken();
 
       // If they are on auth page and have valid token, redirect to home
       if (pathname.startsWith("/auth")) {

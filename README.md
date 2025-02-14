@@ -32,12 +32,23 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
    JWT (Jose) (without refresh token)
    Store token in cookies
    Manage page redirection in middleware
+   Login time : 24h
 
 2. Error Handling
    Define response format
    Catch all errors in api service, consistently return a data format to handle easily
 
-3. Dashboard UI
+3. Dashboard UI - list bookings
+   Filter by status, created date, id
+   Search by customer name, driver name
+   View detail
+   Edit booking: choose driver by search with name
+   Pagination
+   support delete all using checkbox
+   Create booking
+
+4. Real-times
+5. Activity log
 
 ## Note
 
@@ -47,5 +58,4 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 
 ## Do not done
 
-- Remake config folder: api, routes
 - Login form validation

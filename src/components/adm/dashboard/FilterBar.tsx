@@ -1,9 +1,8 @@
-"use client";
-
-import { FC } from "react";
+import { FC, memo } from "react";
 import { Space, Segmented, DatePicker, Input } from "antd";
 import { RideFilterParams } from "@/types/ride";
 import dayjs from "dayjs";
+import { StatusRecord } from "@/config/01.constants";
 
 interface IProps {
   loading: boolean;
@@ -12,17 +11,20 @@ interface IProps {
 
 const FilterBar: FC<IProps> = ({ loading, changeFilter }) => {
   return (
-    <div className="mb-4 flex justify-between gap-2">
-      <Space className="max-w-[70%]" wrap>
+    <div className="flex flex-col gap-2">
+      <Input.Search
+        disabled={loading}
+        onSearch={(value) => changeFilter("search", value)}
+        className="max-w-xs"
+        placeholder="Search by Customer, Driver, Booking ID"
+      />
+      <Space wrap>
         <Segmented
           disabled={loading}
           onChange={(status) => changeFilter("status", status)}
           options={[
             { label: "None", value: null },
-            { label: "Cancelled", value: "cancelled" },
-            { label: "Completed", value: "completed" },
-            { label: "In Progress", value: "in-progress" },
-            { label: "Pending", value: "pending" },
+            ...Object.values(StatusRecord),
           ]}
         />
         <DatePicker.RangePicker
@@ -38,14 +40,8 @@ const FilterBar: FC<IProps> = ({ loading, changeFilter }) => {
         />
         {/* Search driver and multiple select in here */}
       </Space>
-      <Input.Search
-        disabled={loading}
-        onSearch={(value) => changeFilter("search", value)}
-        className="max-w-xs"
-        placeholder="Search by Customer, Driver, Booking ID"
-      />
     </div>
   );
 };
 
-export default FilterBar;
+export default memo(FilterBar);

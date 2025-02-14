@@ -1,14 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 import { drivers } from "@/mockData/driver";
-import { rides } from "@/mockData/ride";
+import { create, rides } from "@/mockData/ride";
 import _omit from "lodash/omit";
 import dayjs from "dayjs";
 import isBetween from "dayjs/plugin/isBetween";
+import { verifyToken } from "@/lib/02.auth";
 
 dayjs.extend(isBetween);
 
 const isDateInRange = (
-  checkDate: string,
+  checkDate: string | null,
   startDate: string,
   endDate: string,
 ) => {
@@ -17,6 +18,18 @@ const isDateInRange = (
 };
 
 export async function GET(request: NextRequest) {
+  // always verify auth token when call from client
+  try {
+    if (request.headers.get("referer")) {
+      await verifyToken();
+    }
+  } catch (error) {
+    return NextResponse.json(
+      { error: error instanceof Error ? error.message : "Unauthorized" },
+      { status: 401 },
+    );
+  }
+
   const searchParams = request.nextUrl.searchParams;
 
   const status = searchParams.get("status");
@@ -71,5 +84,66 @@ export async function GET(request: NextRequest) {
       },
     },
     { status: 200 },
+  );
+}
+
+export async function POST(request: NextRequest) {
+  // always verify auth token when call from client
+  try {
+    if (request.headers.get("referer")) {
+      await verifyToken();
+    }
+  } catch (error) {
+    return NextResponse.json(
+      { error: error instanceof Error ? error.message : "Unauthorized" },
+      { status: 401 },
+    );
+  }
+  
+  const body = await request.json();
+
+  // Simulate validation
+  if (!body.customer) {
+    return NextResponse.json(
+      { message: "customer is required" },
+      { status: 400 },
+    );
+  }
+  if (!body.driverId) {
+    return NextResponse.json(
+      { message: "driverId is required" },
+      { status: 400 },
+    );
+  }
+  if (!body.pickup) {
+    return NextResponse.json(
+      { message: "pickup is required" },
+      { status: 400 },
+    );
+  }
+  if (!body.destination) {
+    return NextResponse.json(
+      { message: "destination is required" },
+      { status: 400 },
+    );
+  }
+
+  const newItem = {
+    ...body,
+    id: Math.floor(Math.random() * 1000) + 1,
+    review: null,
+    status: "in-progress",
+    createdDate: new Date().toISOString().split("T")[0],
+  };
+
+  // Simulate create in db
+  create(newItem);
+
+  return NextResponse.json(
+    {
+      message: "Create item successfully",
+      data: newItem,
+    },
+    { status: 201 },
   );
 }
