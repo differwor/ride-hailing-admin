@@ -6,7 +6,7 @@ import _omit from "lodash/omit";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> }
 ) {
   // always verify auth token when call from client
   try {
@@ -16,7 +16,7 @@ export async function GET(
   } catch (error) {
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Unauthorized" },
-      { status: 401 },
+      { status: 401 }
     );
   }
 
@@ -39,14 +39,14 @@ export async function GET(
       message: null,
       data: itemWithDriver,
     },
-    { status: 200 },
+    { status: 200 }
   );
 }
 
 // Only update the fields that need to be change
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> }
 ) {
   // always verify auth token when call from client
   try {
@@ -56,11 +56,11 @@ export async function PATCH(
   } catch (error) {
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Unauthorized" },
-      { status: 401 },
+      { status: 401 }
     );
   }
 
-  const id = params.id;
+  const id = (await params).id;
   const body = await request.json();
 
   const item = rides.find((r) => String(r.id) === id);
@@ -82,7 +82,7 @@ export async function PATCH(
       message: null,
       data: updatedItem,
     },
-    { status: 200 },
+    { status: 200 }
   );
 }
 

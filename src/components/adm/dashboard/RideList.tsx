@@ -26,7 +26,6 @@ import { useLoading } from "@/hooks/useLoading";
 import RideDetailModal from "./RideDetailModal";
 import RideCreateModal from "./RideCreateModal";
 import useUserStore from "@/store/useUserStore";
-import { useSocketStore } from "@/store/useSocketStore";
 import _includes from "lodash/includes";
 
 interface IProps {
@@ -53,7 +52,6 @@ export const statusConfig = {
 };
 
 const RideList: FC<IProps> = ({ ridesSSR }) => {
-  const { socket } = useSocketStore();
   const { pers } = useUserStore();
   const { isLoading, startLoading, stopLoading } = useLoading();
   const isFirstRender = useRef(true); // skip fetch data in first time because it was fetched from server side
@@ -101,14 +99,6 @@ const RideList: FC<IProps> = ({ ridesSSR }) => {
     }
     fetchRides();
   }, [fetchRides, filterData, stopLoading]);
-
-  useEffect(() => {
-    if (!socket) return;
-    socket.onmessage = (event) => {
-      const data = JSON.parse(event.data);
-      console.log("Received:", data);
-    };
-  }, [socket]);
 
   const columns = useMemo(
     () => [
@@ -206,7 +196,8 @@ const RideList: FC<IProps> = ({ ridesSSR }) => {
 
   // create feature
   const createButton = useMemo(
-    () => _includes(pers, "create") && <RideCreateModal reloadList={reloadRides} />,
+    () =>
+      _includes(pers, "create") && <RideCreateModal reloadList={reloadRides} />,
     [pers, reloadRides],
   );
 
