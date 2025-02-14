@@ -24,8 +24,8 @@ import toast from "react-hot-toast";
 import { PAGINATION_LIMIT, StatusRecord } from "@/config/01.constants";
 import { useLoading } from "@/hooks/useLoading";
 import RideDetailModal from "./RideDetailModal";
-import { useAuth } from "@/app/_context/AuthContext";
 import RideCreateModal from "./RideCreateModal";
+import useUserStore from "@/store/useUserStore";
 
 interface IProps {
   ridesSSR: RideResponse | null;
@@ -51,7 +51,7 @@ export const statusConfig = {
 };
 
 const RideList: FC<IProps> = ({ ridesSSR }) => {
-  const { isAllowed } = useAuth();
+  const { hasPermission } = useUserStore();
   const { isLoading, startLoading, stopLoading } = useLoading();
   const isFirstRender = useRef(true); // skip fetch data in first time because it was fetched from server side
   const [rideData, setRideList] = useState<RideResponse | null>(ridesSSR);
@@ -156,7 +156,7 @@ const RideList: FC<IProps> = ({ ridesSSR }) => {
   // delete feature
   const deleteButton = useMemo(
     () =>
-      isAllowed("delete") && (
+      hasPermission("delete") && (
         <Button
           onClick={() => {
             if (!selectedRideIds.length)
@@ -180,23 +180,23 @@ const RideList: FC<IProps> = ({ ridesSSR }) => {
           Delete
         </Button>
       ),
-    [fetchRides, isAllowed, selectedRideIds, startLoading, stopLoading],
+    [fetchRides, hasPermission, selectedRideIds, startLoading, stopLoading],
   );
   const deleleConfig = useMemo(
     () =>
-      isAllowed("delete")
+      hasPermission("delete")
         ? {
             onChange: (selectedRowKeys: Key[]) =>
               setSelectedRideIds(selectedRowKeys),
           }
         : undefined,
-    [isAllowed],
+    [hasPermission],
   );
 
   // create feature
   const createButton = useMemo(
-    () => isAllowed("create") && <RideCreateModal reloadList={reloadRides} />,
-    [isAllowed, reloadRides],
+    () => hasPermission("create") && <RideCreateModal reloadList={reloadRides} />,
+    [hasPermission, reloadRides],
   );
 
   return (

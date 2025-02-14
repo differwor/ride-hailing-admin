@@ -1,13 +1,13 @@
 "use client";
 
-import { useAuth } from "@/app/_context/AuthContext";
+import useUserStore from "@/store/useUserStore";
+
 
 export default function Page() {
-  const { profile } = useAuth();
-  console.log("asd", profile);
+  const { user } = useUserStore();
   return (
     <div>
-      {profile ? <div>{profile.name}</div> : <div>No profile available</div>}
+      {user ? <div>{user.name}</div> : <div>No profile available</div>}
     </div>
   );
 }

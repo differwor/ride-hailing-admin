@@ -7,9 +7,9 @@ import TextArea from "antd/es/input/TextArea";
 import { FC, memo, useCallback, useMemo, useState } from "react";
 import toast from "react-hot-toast";
 import { statusConfig } from "./RideList";
-import { useAuth } from "@/app/_context/AuthContext";
 import SearchInput from "@/components/common/SearchInput";
 import { DriverService } from "@/services/driver.service";
+import useUserStore from "@/store/useUserStore";
 
 interface IProps {
   id: number;
@@ -17,7 +17,7 @@ interface IProps {
 }
 
 const RideDetailModal: FC<IProps> = ({ id, reloadList }) => {
-  const { isAllowed } = useAuth();
+  const { hasPermission } = useUserStore();
   const [form] = Form.useForm();
   const { isLoading, startLoading, stopLoading } = useLoading();
   const [open, setOpen] = useState<boolean>(false);
@@ -87,8 +87,8 @@ const RideDetailModal: FC<IProps> = ({ id, reloadList }) => {
   );
 
   const canEditing = useCallback(
-    (key: string) => editable && isAllowed(key),
-    [editable, isAllowed],
+    (key: string) => editable && hasPermission(key),
+    [editable, hasPermission],
   );
 
   const config = useMemo(

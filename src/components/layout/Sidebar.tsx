@@ -2,7 +2,7 @@
 
 import { usePathname, useRouter } from "next/navigation";
 import toast from "react-hot-toast";
-import { useAuth } from "@/app/_context/AuthContext";
+import useUserStore from "@/store/useUserStore";
 import { AuthService } from "@/services/auth.service";
 import {
   DashboardOutlined,
@@ -16,7 +16,7 @@ import Link from "next/link";
 export default function Sidebar() {
   const router = useRouter();
   const pathname = usePathname();
-  const { profile } = useAuth();
+  const { user } = useUserStore();
 
   const handleLogout = async () => {
     await AuthService.logout();
@@ -27,7 +27,7 @@ export default function Sidebar() {
   return (
     <div className="h-full flex flex-col justify-between border-e border-[#0505050f]">
       <div className="">
-        <p className="p-5 text-center">{profile?.role} PANEL</p>
+        <p className="p-5 text-center">{user?.role}</p>
         <Menu
           theme="light"
           defaultSelectedKeys={[pathname]}
