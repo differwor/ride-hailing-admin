@@ -41,7 +41,16 @@ const SearchInput: FC<TProps> = ({ callback, ...props }) => {
       labelInValue
       filterOption={false}
       onSearch={handleSearch}
-      notFoundContent={isLoading ? <Spin size="small" /> : <Empty styles={{ image: { height: 30 } }} image={Empty.PRESENTED_IMAGE_DEFAULT} />}
+      notFoundContent={
+        isLoading ? (
+          <Spin size="small" />
+        ) : (
+          <Empty
+            styles={{ image: { height: 30 } }}
+            image={Empty.PRESENTED_IMAGE_DEFAULT}
+          />
+        )
+      }
       {...props}
       options={options}
     />

@@ -45,7 +45,7 @@ const RideDetailModal: FC<IProps> = ({ id, reloadList }) => {
           setOpen(false);
         });
     },
-    [id, reloadList, startLoading, stopLoading]
+    [id, reloadList, startLoading, stopLoading],
   );
 
   const openModal = useCallback(() => {
@@ -83,17 +83,17 @@ const RideDetailModal: FC<IProps> = ({ id, reloadList }) => {
           label: r.name,
         }));
       }),
-    []
+    [],
   );
 
   const canEditing = useCallback(
     (key: string) => editable && isAllowed(key),
-    [editable, isAllowed]
+    [editable, isAllowed],
   );
 
   const config = useMemo(
     () => statusConfig[rideDetail?.status || "in-progress"],
-    [rideDetail?.status]
+    [rideDetail?.status],
   );
 
   return (

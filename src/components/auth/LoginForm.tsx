@@ -21,7 +21,7 @@ export default function LoginForm() {
         }
       });
     },
-    null
+    null,
   );
 
   return (

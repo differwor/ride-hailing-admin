@@ -12,7 +12,7 @@ export async function GET() {
 
   // Simulate query permissions by role
   const permissionsByRole = permissions.find(
-    (p) => p.role === newestInfo?.role
+    (p) => p.role === newestInfo?.role,
   );
 
   // Return user data without password
@@ -21,6 +21,6 @@ export async function GET() {
       message: null,
       data: { ...newestInfo, permissions: permissionsByRole?.actions || [] },
     },
-    { status: 200 }
+    { status: 200 },
   );
 }

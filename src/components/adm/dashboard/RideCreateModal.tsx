@@ -36,7 +36,7 @@ const RideCreateModal: FC<IProps> = ({ reloadList }) => {
           setOpen(false);
         });
     },
-    [reloadList, startLoading, stopLoading]
+    [reloadList, startLoading, stopLoading],
   );
 
   const searchDriver = useCallback(
@@ -50,7 +50,7 @@ const RideCreateModal: FC<IProps> = ({ reloadList }) => {
           label: r.name,
         }));
       }),
-    []
+    [],
   );
 
   return (

@@ -21,7 +21,7 @@ export async function GET(
   }
 
   const id = (await params).id;
-  console.log('rides', rides);
+
   const item = rides.find((r) => String(r.id) === id);
 
   if (!item) {
@@ -29,7 +29,10 @@ export async function GET(
   }
 
   // simulate aggregation query = ride + driver
-  const itemWithDriver = { ..._omit(item, "driverId"), driver: drivers.find((d) => d.id === item.driverId) || null };
+  const itemWithDriver = {
+    ..._omit(item, "driverId"),
+    driver: drivers.find((d) => d.id === item.driverId) || null,
+  };
 
   return NextResponse.json(
     {

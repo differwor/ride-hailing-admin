@@ -69,7 +69,7 @@ const RideList: FC<IProps> = ({ ridesSSR }) => {
       startLoading();
       setFilterData((prev) => ({ ...prev, page: 1, [key]: value }));
     },
-    [startLoading]
+    [startLoading],
   );
 
   const fetchRides = useCallback(
@@ -83,7 +83,7 @@ const RideList: FC<IProps> = ({ ridesSSR }) => {
           }
         })
         .finally(() => stopLoading()),
-    [filterData, stopLoading]
+    [filterData, stopLoading],
   );
 
   const reloadRides = useCallback(() => {
@@ -150,7 +150,7 @@ const RideList: FC<IProps> = ({ ridesSSR }) => {
         ),
       },
     ],
-    [reloadRides]
+    [reloadRides],
   );
 
   // delete feature
@@ -159,7 +159,8 @@ const RideList: FC<IProps> = ({ ridesSSR }) => {
       isAllowed("delete") && (
         <Button
           onClick={() => {
-            if (!selectedRideIds.length) return toast.error("No booking selected");
+            if (!selectedRideIds.length)
+              return toast.error("No booking selected");
             startLoading();
             RideService.delete(selectedRideIds.join(","))
               .then((res) => {
@@ -179,7 +180,7 @@ const RideList: FC<IProps> = ({ ridesSSR }) => {
           Delete
         </Button>
       ),
-    [fetchRides, isAllowed, selectedRideIds, startLoading, stopLoading]
+    [fetchRides, isAllowed, selectedRideIds, startLoading, stopLoading],
   );
   const deleleConfig = useMemo(
     () =>
@@ -189,13 +190,13 @@ const RideList: FC<IProps> = ({ ridesSSR }) => {
               setSelectedRideIds(selectedRowKeys),
           }
         : undefined,
-    [isAllowed]
+    [isAllowed],
   );
 
   // create feature
   const createButton = useMemo(
     () => isAllowed("create") && <RideCreateModal reloadList={reloadRides} />,
-    [isAllowed, reloadRides]
+    [isAllowed, reloadRides],
   );
 
   return (

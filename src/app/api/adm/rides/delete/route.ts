@@ -2,7 +2,6 @@ import { verifyToken } from "@/lib/02.auth";
 import { remove } from "@/mockData/ride";
 import { NextRequest, NextResponse } from "next/server";
 
-
 export async function POST(request: NextRequest) {
   // always verify auth token when call from client
   try {
@@ -15,7 +14,7 @@ export async function POST(request: NextRequest) {
       { status: 401 },
     );
   }
-  
+
   const body = await request.json();
 
   if (!body.ids) {

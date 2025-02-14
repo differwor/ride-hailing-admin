@@ -2,7 +2,6 @@ import { verifyToken } from "@/lib/02.auth";
 import { drivers } from "@/mockData/driver";
 import { NextRequest, NextResponse } from "next/server";
 
-
 export async function GET(request: NextRequest) {
   // always verify auth token when call from client
   try {
@@ -23,7 +22,9 @@ export async function GET(request: NextRequest) {
   const limit = parseInt(searchParams.get("limit") as string) || 3;
 
   // filter by params
-  const ridesByFilter = drivers.filter((r) => search ? r.name.startsWith(search) : true);
+  const ridesByFilter = drivers.filter((r) =>
+    search ? r.name.startsWith(search) : true,
+  );
 
   // Return by page and limit
   let ridesByPaging;
