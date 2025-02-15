@@ -5,9 +5,7 @@ import { NextRequest, NextResponse } from "next/server";
 export async function GET(request: NextRequest) {
   // always verify auth token when call from client
   try {
-    if (request.headers.get("referer")) {
-      await verifyToken();
-    }
+    await verifyToken();
   } catch (error) {
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Unauthorized" },

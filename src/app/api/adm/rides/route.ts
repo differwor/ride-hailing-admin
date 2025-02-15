@@ -20,16 +20,14 @@ const isDateInRange = (
 export async function GET(request: NextRequest) {
   // always verify auth token when call from client
   try {
-    if (request.headers.get("referer")) {
-      await verifyToken();
-    }
+    await verifyToken();
   } catch (error) {
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Unauthorized" },
       { status: 401 },
     );
   }
-
+  
   const searchParams = request.nextUrl.searchParams;
 
   const status = searchParams.get("status");
@@ -90,9 +88,7 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   // always verify auth token when call from client
   try {
-    if (request.headers.get("referer")) {
-      await verifyToken();
-    }
+    await verifyToken();
   } catch (error) {
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Unauthorized" },

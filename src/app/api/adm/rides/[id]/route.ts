@@ -10,9 +10,7 @@ export async function GET(
 ) {
   // always verify auth token when call from client
   try {
-    if (request.headers.get("referer")) {
-      await verifyToken();
-    }
+    await verifyToken();
   } catch (error) {
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Unauthorized" },
@@ -50,9 +48,7 @@ export async function PATCH(
 ) {
   // always verify auth token when call from client
   try {
-    if (request.headers.get("referer")) {
-      await verifyToken();
-    }
+    await verifyToken();
   } catch (error) {
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Unauthorized" },

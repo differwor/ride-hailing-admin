@@ -1,3 +1,6 @@
+import { drivers } from "./driver";
+import _omit from "lodash/omit";
+
 type Status = "completed" | "cancelled" | "pending" | "in-progress";
 
 interface Ride {
@@ -80,6 +83,30 @@ export let rides: Ride[] = [
     review: "Good ride",
   },
 ];
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const getRidesSS = async (page: number, limit: number): Promise<any> => {
+  const aggregationRides = rides.map((r) => {
+    const driver = drivers.find((d) => d.id === r.driverId);
+    return { ..._omit(r, "driverId"), driver };
+  });
+
+  let ridesByPaging = aggregationRides;
+  if (page && limit) {
+    const startIndex = (page - 1) * limit;
+    ridesByPaging = aggregationRides.slice(startIndex, startIndex + limit);
+  }
+
+  return {
+    items: ridesByPaging,
+    extras: {
+      current: page,
+      limit: limit,
+      totalItems: ridesByPaging.length,
+      totalPages: Math.ceil(ridesByPaging.length / limit),
+    },
+  };
+}
 
 export const remove = (ids: string) => {
   const parsedIds = ids.split(",");
