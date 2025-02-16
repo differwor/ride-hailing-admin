@@ -30,6 +30,7 @@ export default function LoginForm() {
       className="flex flex-col items-center gap-4 max-w-xs mx-auto text-black"
     >
       <input
+        disabled={pending}
         type="email"
         name="email"
         placeholder="Email"
@@ -38,6 +39,7 @@ export default function LoginForm() {
         className="p-2 w-full rounded bg-gray-100 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
       />
       <input
+        disabled={pending}
         type="password"
         name="password"
         placeholder="Password"
