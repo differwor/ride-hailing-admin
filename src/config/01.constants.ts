@@ -12,6 +12,7 @@ export const StatusRecord = {
 
 export const StatusArray = Object.values(StatusRecord).map((s) => s.value);
 
-export const SW_SERVER_URL = "ws://ws-basic-node-production.up.railway.app/";
+export const SW_SERVER_URL =
+  process.env.NEXT_PUBLIC_WS_SERVER_URL || "ws://localhost:8080";
 export const SW_SERVER_API_URL =
-  "https://ws-basic-node-production.up.railway.app";
+  process.env.NEXT_PUBLIC_WS_SERVER_API_URL || "http://localhost:8080";
