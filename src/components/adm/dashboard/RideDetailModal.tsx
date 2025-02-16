@@ -7,10 +7,13 @@ import TextArea from "antd/es/input/TextArea";
 import { FC, memo, useCallback, useMemo, useState } from "react";
 import toast from "react-hot-toast";
 import { statusConfig } from "./RideList";
-import SearchInput from "@/components/common/SearchInput";
+import SearchSelect from "@/components/common/SearchSelect";
 import { DriverService } from "@/services/driver.service";
 import useUserStore from "@/store/useUserStore";
 import _includes from "lodash/includes";
+import { WSService } from "@/services/ws.service";
+import { useSocketStore } from "@/store/useSocketStore";
+import { getStatusLabel } from "@/utils/getStatusLabel";
 
 interface IProps {
   id: number;
@@ -18,12 +21,29 @@ interface IProps {
 }
 
 const RideDetailModal: FC<IProps> = ({ id, reloadList }) => {
-  const { pers } = useUserStore();
+  const { pers, user } = useUserStore();
+  const { isConnected } = useSocketStore();
   const [form] = Form.useForm();
   const { isLoading, startLoading, stopLoading } = useLoading();
   const [open, setOpen] = useState<boolean>(false);
   const [editable, setEditable] = useState<boolean>(false);
   const [rideDetail, setRideDetail] = useState<Ride | null>(null);
+
+  const broadcastAction = useCallback(
+    (oldStatus: string | undefined, newStatus: string | undefined) => {
+      if (!isConnected) return reloadList();
+      WSService.broadcast({
+        userId: user?.id.toString(),
+        type: "ride-update-status",
+        data: `Booking status updated from ${oldStatus} to ${newStatus} by ${user?.name}`,
+      }).then((res) => {
+        if (res.error) {
+          toast.error(res.error);
+        }
+      });
+    },
+    [isConnected, reloadList, user],
+  );
 
   const updateRide = useCallback(
     (newValues: Partial<Ride> & { driver: { value: number } }) => {
@@ -37,7 +57,14 @@ const RideDetailModal: FC<IProps> = ({ id, reloadList }) => {
             toast.error(res.error);
           } else {
             toast.success("Update booking successfully");
-            reloadList();
+            if (newValues.status !== rideDetail?.status) {
+              broadcastAction(
+                getStatusLabel(rideDetail?.status),
+                getStatusLabel(newValues.status),
+              );
+            } else {
+              reloadList();
+            }
           }
         })
         .finally(() => {
@@ -46,7 +73,14 @@ const RideDetailModal: FC<IProps> = ({ id, reloadList }) => {
           setOpen(false);
         });
     },
-    [id, reloadList, startLoading, stopLoading],
+    [
+      startLoading,
+      id,
+      rideDetail?.status,
+      broadcastAction,
+      reloadList,
+      stopLoading,
+    ],
   );
 
   const openModal = useCallback(() => {
@@ -145,7 +179,7 @@ const RideDetailModal: FC<IProps> = ({ id, reloadList }) => {
                   color={config.color}
                   key={rideDetail?.status}
                 >
-                  {rideDetail?.status.toUpperCase()}
+                  {getStatusLabel(rideDetail?.status)}
                 </Tag>
               )}
             </Form.Item>
@@ -171,7 +205,7 @@ const RideDetailModal: FC<IProps> = ({ id, reloadList }) => {
               rules={[{ required: true }]}
             >
               {canEditing("update:driver") ? (
-                <SearchInput callback={searchDriver} />
+                <SearchSelect callback={searchDriver} />
               ) : (
                 <p className="text-blue-400">{rideDetail?.driver?.name}</p>
               )}

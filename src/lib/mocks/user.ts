@@ -18,7 +18,7 @@ export const users = [
   {
     id: 2,
     email: "o@m.com",
-    name: "Regular User",
+    name: "Truong Anh Ngoc",
     password: "1234",
     role: "OPERATOR" as Role,
   },

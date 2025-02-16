@@ -8,6 +8,8 @@ import { Content, Header } from "antd/es/layout/layout";
 import Sidebar from "../../components/layout/Sidebar";
 import "@ant-design/v5-patch-for-react-19";
 import useUserStore from "@/store/useUserStore";
+import { useSocketStore } from "@/store/useSocketStore";
+import HeadingBar from "@/components/layout/HeadingBar";
 
 export default function AdminLayout({
   children,
@@ -17,12 +19,16 @@ export default function AdminLayout({
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
+  const { disconnect, connect } = useSocketStore();
   const { fetchUsers } = useUserStore();
   const [collapsed, setCollapsed] = useState(false);
 
   useEffect(() => {
     fetchUsers();
-  }, [fetchUsers]);
+    connect();
+    return () => disconnect();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <Layout>
@@ -30,7 +36,9 @@ export default function AdminLayout({
         <Sidebar />
       </Sider>
       <Layout>
-        <Header style={{ padding: 0, background: colorBgContainer }}>
+        <Header
+          style={{ padding: 0, background: colorBgContainer, display: "flex" }}
+        >
           <Button
             type="text"
             icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
@@ -41,6 +49,7 @@ export default function AdminLayout({
               height: 64,
             }}
           />
+          <HeadingBar />
         </Header>
         <Content
           className="m-6 p-6"

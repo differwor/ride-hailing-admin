@@ -15,13 +15,13 @@ interface Ride {
   review: string | null;
 }
 
-export let rides: Ride[] = [
+export const rides: Ride[] = [
   {
     id: 1,
-    customer: "cus1",
+    customer: "David",
     driverId: 101,
-    pickup: "pic1",
-    destination: "des1",
+    pickup: "Quan 1, HCM",
+    destination: "Quan 3, HCM",
     status: "completed",
     createdDate: "2025-02-01",
     rating: 4,
@@ -29,10 +29,10 @@ export let rides: Ride[] = [
   },
   {
     id: 2,
-    customer: "cus2",
+    customer: "Tony",
     driverId: 102,
-    pickup: "pic2",
-    destination: "des2",
+    pickup: "Quan 2, HCM",
+    destination: "Quan 7, HCM",
     status: "cancelled",
     createdDate: "2025-02-03",
     rating: 4,
@@ -40,10 +40,10 @@ export let rides: Ride[] = [
   },
   {
     id: 3,
-    customer: "cus3",
+    customer: "Justin",
     driverId: 103,
-    pickup: "pic3",
-    destination: "des3",
+    pickup: "Quan 5, HCM",
+    destination: "Quan 10, HCM",
     status: "pending",
     createdDate: "2025-02-05",
     rating: 2,
@@ -51,10 +51,10 @@ export let rides: Ride[] = [
   },
   {
     id: 4,
-    customer: "cus4",
+    customer: "Travis",
     driverId: 104,
-    pickup: "pic4",
-    destination: "des4",
+    pickup: "Quan 9, HCM",
+    destination: "Thu Duc, HCM",
     status: "in-progress",
     createdDate: "2025-02-07",
     rating: 3,
@@ -62,10 +62,10 @@ export let rides: Ride[] = [
   },
   {
     id: 5,
-    customer: "cus5",
+    customer: "Kendrick",
     driverId: 102,
-    pickup: "pic5",
-    destination: "des6",
+    pickup: "Quan 7, HCM",
+    destination: "Quan 2, HCM",
     status: "in-progress",
     createdDate: "2025-02-09",
     rating: 1,
@@ -73,10 +73,10 @@ export let rides: Ride[] = [
   },
   {
     id: 6,
-    customer: "cus6",
+    customer: "Drake",
     driverId: 103,
-    pickup: "pic6",
-    destination: "des6",
+    pickup: "Quan 4, HCM",
+    destination: "Quan 1, HCM",
     status: "completed",
     createdDate: "2025-02-11",
     rating: 2,
@@ -102,19 +102,23 @@ export const getRidesSS = async (page: number, limit: number): Promise<any> => {
     extras: {
       current: page,
       limit: limit,
-      totalItems: ridesByPaging.length,
-      totalPages: Math.ceil(ridesByPaging.length / limit),
+      totalItems: rides.length,
+      totalPages: Math.ceil(rides.length / limit),
     },
   };
-}
+};
 
 export const remove = (ids: string) => {
   const parsedIds = ids.split(",");
-  rides = rides.filter((item) => !parsedIds.includes(String(item.id)));
+  for (let i = rides.length - 1; i >= 0; i--) {
+    if (parsedIds.includes(rides[i].id.toString())) {
+      rides.splice(i, 1);
+    }
+  }
 };
 
 export const create = (newItem: Ride) => {
-  rides.push(newItem);
+  rides.unshift(newItem);
   return newItem;
 };
 

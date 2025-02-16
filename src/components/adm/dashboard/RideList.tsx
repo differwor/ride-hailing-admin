@@ -15,7 +15,6 @@ import {
   useCallback,
   useEffect,
   useMemo,
-  useRef,
   useState,
 } from "react";
 import FilterBar from "./FilterBar";
@@ -27,6 +26,9 @@ import RideDetailModal from "./RideDetailModal";
 import RideCreateModal from "./RideCreateModal";
 import useUserStore from "@/store/useUserStore";
 import _includes from "lodash/includes";
+import { useSocketStore } from "@/store/useSocketStore";
+import { WSService } from "@/services/ws.service";
+import { getStatusLabel } from "@/utils/getStatusLabel";
 
 interface IProps {
   ridesSSR: RideResponse | null;
@@ -52,9 +54,9 @@ export const statusConfig = {
 };
 
 const RideList: FC<IProps> = ({ ridesSSR }) => {
-  const { pers } = useUserStore();
-  const { isLoading, startLoading, stopLoading } = useLoading();
-  const isFirstRender = useRef(true); // skip fetch data in first time because it was fetched from server side
+  const { pers, user } = useUserStore();
+  const { socketData, isConnected } = useSocketStore();
+  const { isLoading, startLoading, stopLoading } = useLoading(true);
   const [rideData, setRideList] = useState<RideResponse | null>(ridesSSR);
   const [filterData, setFilterData] = useState<RideFilterParams>({
     status: null,
@@ -73,32 +75,18 @@ const RideList: FC<IProps> = ({ ridesSSR }) => {
     [startLoading],
   );
 
-  const fetchRides = useCallback(
-    () =>
-      RideService.getRides(filterData)
-        .then((res) => {
-          if (res.error) {
-            toast.error(res.error);
-          } else {
-            setRideList(res.data);
-          }
-        })
-        .finally(() => stopLoading()),
-    [filterData, stopLoading],
-  );
-
-  const reloadRides = useCallback(() => {
+  const fetchRides = useCallback(() => {
     startLoading();
-    fetchRides();
-  }, [fetchRides, startLoading]);
-
-  useEffect(() => {
-    if (isFirstRender.current) {
-      isFirstRender.current = false;
-      return;
-    }
-    fetchRides();
-  }, [fetchRides, filterData, stopLoading]);
+    RideService.getRides(filterData)
+      .then((res) => {
+        if (res.error) {
+          toast.error(res.error);
+        } else {
+          setRideList(res.data);
+        }
+      })
+      .finally(() => stopLoading());
+  }, [filterData, startLoading, stopLoading]);
 
   const columns = useMemo(
     () => [
@@ -136,7 +124,7 @@ const RideList: FC<IProps> = ({ ridesSSR }) => {
           const config = statusConfig[status];
           return (
             <Tag icon={config.icon} color={config.color} key={status}>
-              {status.toUpperCase()}
+              {getStatusLabel(status)}
             </Tag>
           );
         },
@@ -146,42 +134,55 @@ const RideList: FC<IProps> = ({ ridesSSR }) => {
         key: "action",
         render: (_: unknown, record: Ride) => (
           <Space size="middle">
-            <RideDetailModal reloadList={reloadRides} id={record.id} />
+            <RideDetailModal reloadList={fetchRides} id={record.id} />
           </Space>
         ),
       },
     ],
-    [reloadRides],
+    [fetchRides],
   );
+
+  const broadcastAction = useCallback(() => {
+    if (!isConnected) return fetchRides();
+    WSService.broadcast({
+      userId: user?.id.toString(),
+      type: "ride-delete",
+      data: null,
+    })
+      .then((res) => {
+        if (res.error) {
+          toast.error(res.error);
+        }
+      })
+      .finally(() => {
+        toast.success("Delete booking successfully");
+      });
+  }, [fetchRides, isConnected, user?.id]);
 
   // delete feature
   const deleteButton = useMemo(
     () =>
       _includes(pers, "delete") && (
         <Button
+          danger
+          loading={isLoading}
           onClick={() => {
             if (!selectedRideIds.length)
               return toast.error("No booking selected");
             startLoading();
-            RideService.delete(selectedRideIds.join(","))
-              .then((res) => {
-                if (res.error) {
-                  toast.error(res.error);
-                } else {
-                  toast.success("Delete booking successfully");
-                  fetchRides();
-                }
-              })
-              .finally(() => {
-                stopLoading();
-              });
+            RideService.delete(selectedRideIds.join(",")).then((res) => {
+              if (res.error) {
+                toast.error(res.error);
+              } else {
+                broadcastAction();
+              }
+            });
           }}
-          danger
         >
           Delete
         </Button>
       ),
-    [fetchRides, pers, selectedRideIds, startLoading, stopLoading],
+    [broadcastAction, isLoading, pers, selectedRideIds, startLoading],
   );
   const deleleConfig = useMemo(
     () =>
@@ -197,13 +198,27 @@ const RideList: FC<IProps> = ({ ridesSSR }) => {
   // create feature
   const createButton = useMemo(
     () =>
-      _includes(pers, "create") && <RideCreateModal reloadList={reloadRides} />,
-    [pers, reloadRides],
+      _includes(pers, "create") && <RideCreateModal reloadList={fetchRides} />,
+    [pers, fetchRides],
   );
 
+  useEffect(() => {
+    fetchRides();
+  }, [fetchRides, filterData]);
+
+  useEffect(() => {
+    if (!socketData) return;
+    if (
+      ["ride-create", "ride-delete", "ride-update-status"].includes(
+        socketData.type,
+      )
+    ) {
+      fetchRides();
+    }
+  }, [fetchRides, socketData]);
+
   return (
-    <div className="w-full flex flex-col gap-y-4">
-      <strong className=" text-4xl">List bookings</strong>
+    <>
       <div className="flex items-end justify-between gap-2">
         <FilterBar loading={isLoading} changeFilter={changeFilter} />
         <Space>
@@ -228,7 +243,7 @@ const RideList: FC<IProps> = ({ ridesSSR }) => {
           },
         }}
       />
-    </div>
+    </>
   );
 };
 

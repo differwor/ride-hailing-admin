@@ -1,5 +1,5 @@
 import { verifyToken } from "@/lib/02.auth";
-import { remove } from "@/mockData/ride";
+import { remove } from "@/lib/mocks/ride";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {

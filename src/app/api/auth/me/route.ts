@@ -1,6 +1,6 @@
 import { verifyToken } from "@/lib/02.auth";
-import { permissions } from "@/mockData/permission";
-import { users } from "@/mockData/user";
+import { permissions } from "@/lib/mocks/permission";
+import { users } from "@/lib/mocks/user";
 import { NextResponse } from "next/server";
 
 export async function GET() {

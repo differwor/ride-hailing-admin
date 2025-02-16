@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import _omit from "lodash/omit";
-import { users } from "@/mockData/user";
-import { permissions } from "@/mockData/permission";
+import { users } from "@/lib/mocks/user";
+import { permissions } from "@/lib/mocks/permission";
 import { createToken, setTokenCookie } from "@/lib/02.auth";
 
 type Role = "ADMIN" | "OPERATOR";

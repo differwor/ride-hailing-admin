@@ -1,5 +1,5 @@
 import { verifyToken } from "@/lib/02.auth";
-import { drivers } from "@/mockData/driver";
+import { drivers } from "@/lib/mocks/driver";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
@@ -21,7 +21,7 @@ export async function GET(request: NextRequest) {
 
   // filter by params
   const ridesByFilter = drivers.filter((r) =>
-    search ? r.name.startsWith(search) : true,
+    search ? r.name.toLowerCase().startsWith(search) : true,
   );
 
   // Return by page and limit

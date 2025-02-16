@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { drivers } from "@/mockData/driver";
-import { create, rides } from "@/mockData/ride";
+import { drivers } from "@/lib/mocks/driver";
+import { create, rides } from "@/lib/mocks/ride";
 import _omit from "lodash/omit";
 import dayjs from "dayjs";
 import isBetween from "dayjs/plugin/isBetween";
@@ -27,7 +27,7 @@ export async function GET(request: NextRequest) {
       { status: 401 },
     );
   }
-  
+
   const searchParams = request.nextUrl.searchParams;
 
   const status = searchParams.get("status");
@@ -54,8 +54,8 @@ export async function GET(request: NextRequest) {
       isValidRange &&
       (status ? r.status === status : true) &&
       (search
-        ? r.customer.startsWith(search) ||
-          r.driver?.name.startsWith(search) ||
+        ? r.customer.toLowerCase().startsWith(search) ||
+          r.driver?.name.toLowerCase().startsWith(search) ||
           String(r.id).startsWith(search)
         : true)
     );

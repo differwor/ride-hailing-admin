@@ -1,12 +1,12 @@
 import { verifyToken } from "@/lib/02.auth";
-import { drivers } from "@/mockData/driver";
-import { rides, update } from "@/mockData/ride";
+import { drivers } from "@/lib/mocks/driver";
+import { rides, update } from "@/lib/mocks/ride";
 import { NextRequest, NextResponse } from "next/server";
 import _omit from "lodash/omit";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   // always verify auth token when call from client
   try {
@@ -14,7 +14,7 @@ export async function GET(
   } catch (error) {
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Unauthorized" },
-      { status: 401 }
+      { status: 401 },
     );
   }
 
@@ -37,14 +37,14 @@ export async function GET(
       message: null,
       data: itemWithDriver,
     },
-    { status: 200 }
+    { status: 200 },
   );
 }
 
 // Only update the fields that need to be change
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   // always verify auth token when call from client
   try {
@@ -52,7 +52,7 @@ export async function PATCH(
   } catch (error) {
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Unauthorized" },
-      { status: 401 }
+      { status: 401 },
     );
   }
 
@@ -78,7 +78,7 @@ export async function PATCH(
       message: null,
       data: updatedItem,
     },
-    { status: 200 }
+    { status: 200 },
   );
 }
 

@@ -11,3 +11,7 @@ export const StatusRecord = {
 } as const;
 
 export const StatusArray = Object.values(StatusRecord).map((s) => s.value);
+
+export const SW_SERVER_URL = "ws://ws-basic-node-production.up.railway.app/";
+export const SW_SERVER_API_URL =
+  "https://ws-basic-node-production.up.railway.app";

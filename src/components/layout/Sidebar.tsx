@@ -1,19 +1,18 @@
-"use client";
-
 import { usePathname, useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import useUserStore from "@/store/useUserStore";
 import { AuthService } from "@/services/auth.service";
 import {
   DashboardOutlined,
-  TruckOutlined,
-  SecurityScanOutlined,
+  // TruckOutlined,
+  // SecurityScanOutlined,
   UserOutlined,
 } from "@ant-design/icons";
 import { Menu, Button } from "antd";
 import Link from "next/link";
+import { FC, memo } from "react";
 
-export default function Sidebar() {
+const Sidebar: FC = () => {
   const router = useRouter();
   const pathname = usePathname();
   const { user } = useUserStore();
@@ -37,16 +36,16 @@ export default function Sidebar() {
               icon: <DashboardOutlined />,
               label: <Link href="/adm">Dashboard</Link>,
             },
-            {
-              key: "/adm/driver",
-              icon: <TruckOutlined />,
-              label: <Link href="/adm/driver">Manage driver</Link>,
-            },
-            {
-              key: "/adm/permission",
-              icon: <SecurityScanOutlined />,
-              label: <Link href="/adm/permission">Permission</Link>,
-            },
+            // {
+            //   key: "/adm/driver",
+            //   icon: <TruckOutlined />,
+            //   label: <Link href="/adm/driver">Manage driver</Link>,
+            // },
+            // {
+            //   key: "/adm/permission",
+            //   icon: <SecurityScanOutlined />,
+            //   label: <Link href="/adm/permission">Permission</Link>,
+            // },
             {
               key: "/adm/profile",
               icon: <UserOutlined />,
@@ -70,4 +69,6 @@ export default function Sidebar() {
       </div>
     </div>
   );
-}
+};
+
+export default memo(Sidebar);

@@ -7,7 +7,7 @@ type TProps = SelectProps & {
   callback: (newValue: string) => Promise<SelectProps["options"]>;
 };
 
-const SearchInput: FC<TProps> = ({ callback, ...props }) => {
+const SearchSelect: FC<TProps> = ({ callback, ...props }) => {
   const { isLoading, startLoading, stopLoading } = useLoading();
   const [options, setOptions] = useState<SelectProps["options"]>([]);
   const fetchRef = useRef(0);
@@ -22,11 +22,7 @@ const SearchInput: FC<TProps> = ({ callback, ...props }) => {
 
       // allow fetch api from out of component
       callback(newValue).then((newOptions) => {
-        if (fetchId !== fetchRef.current) {
-          // for fetch callback order
-          return;
-        }
-
+        if (fetchId !== fetchRef.current) return;
         setOptions(newOptions as SelectProps["options"]);
         stopLoading();
       });
@@ -57,4 +53,4 @@ const SearchInput: FC<TProps> = ({ callback, ...props }) => {
   );
 };
 
-export default SearchInput;
+export default SearchSelect;

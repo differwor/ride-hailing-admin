@@ -1,7 +1,10 @@
-import SearchInput from "@/components/common/SearchInput";
+import SearchSelect from "@/components/common/SearchSelect";
 import { useLoading } from "@/hooks/useLoading";
 import { DriverService } from "@/services/driver.service";
 import { RideService } from "@/services/ride.service";
+import { WSService } from "@/services/ws.service";
+import { useSocketStore } from "@/store/useSocketStore";
+import useUserStore from "@/store/useUserStore";
 import { Ride } from "@/types/ride";
 import { Button, Form, Input, Modal } from "antd";
 import { FC, memo, useCallback, useState } from "react";
@@ -12,9 +15,24 @@ interface IProps {
 }
 
 const RideCreateModal: FC<IProps> = ({ reloadList }) => {
+  const { user } = useUserStore();
+  const { isConnected } = useSocketStore();
   const [form] = Form.useForm();
   const { isLoading, startLoading, stopLoading } = useLoading();
   const [open, setOpen] = useState<boolean>(false);
+
+  const broadcastStatus = useCallback(() => {
+    if (!isConnected) return reloadList();
+    WSService.broadcast({
+      userId: user?.id.toString(),
+      type: "ride-create",
+      data: `Booking created by ${user?.name}`,
+    }).then((res) => {
+      if (res.error) {
+        toast.error(res.error);
+      }
+    });
+  }, [isConnected, reloadList, user]);
 
   const handleCreate = useCallback(
     (newValues: Partial<Ride> & { driver: { value: number } }) => {
@@ -28,15 +46,16 @@ const RideCreateModal: FC<IProps> = ({ reloadList }) => {
             toast.error(res.error);
           } else {
             toast.success("Create booking successfully");
-            reloadList();
+            broadcastStatus();
           }
         })
         .finally(() => {
+          form.resetFields();
           stopLoading();
           setOpen(false);
         });
     },
-    [reloadList, startLoading, stopLoading],
+    [startLoading, broadcastStatus, form, stopLoading],
   );
 
   const searchDriver = useCallback(
@@ -84,7 +103,7 @@ const RideCreateModal: FC<IProps> = ({ reloadList }) => {
               name="driver"
               rules={[{ required: true }]}
             >
-              <SearchInput callback={searchDriver} />
+              <SearchSelect callback={searchDriver} />
             </Form.Item>
             <Form.Item
               label="Pick up"

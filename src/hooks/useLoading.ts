@@ -6,8 +6,8 @@ interface UseLoadingReturn {
   stopLoading: () => void;
 }
 
-export const useLoading = (): UseLoadingReturn => {
-  const [isLoading, setIsLoading] = useState(false);
+export const useLoading = (initial?: boolean): UseLoadingReturn => {
+  const [isLoading, setIsLoading] = useState(initial || false);
 
   const startLoading = useCallback(() => {
     setIsLoading(true);
