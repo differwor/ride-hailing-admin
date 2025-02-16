@@ -27,6 +27,12 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
 
 ## Overview
+*Deploy on vercel
+
+1. API Implementation (Mock Data)
+   Use Next.js API routes to simulate backend APIs.
+   Implement proper CRUD operations for bookings and drivers.
+   Handle API errors gracefully.
 
 1. Login system
    JWT (Jose) (without refresh token)
@@ -47,15 +53,27 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
    support delete all using checkbox
    Create booking
 
-4. Real-times
-5. Activity log
+4. Notifications System
+   Show toast notifications for important actions:
+   Success messages for creating/editing bookings.
+   Error alerts for failed API requests.
+
+5. Real-times Updates (WebSocket)
+   Implement real-time updates for bookings:
+      New bookings appear automatically without refreshing.
+      Status changes reflect instantly across the dashboard.
+
+   *I deployed an independent node server to run web socket using Railway
+
+6. Activity log
+   Track actions performed by users:
+      “Booking created by Admin A”
+      “Ride status updated from Pending to Completed by Operator B”
+   Display logs in a separate Activity Log section.
+
+   *Do not store in mock database
 
 ## Note
-
 - Recoil do not being updated now so there is no support for it hence it will not work for the newer versions of react.
 - API Response format { message, data }
 - Only pre-fetch profile from client side, need to get cookie token in browser
-
-## Do not done
-
-- Login form validation
